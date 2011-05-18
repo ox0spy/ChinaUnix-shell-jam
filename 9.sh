@@ -59,8 +59,8 @@ main | tee out
 
 # 版块数
 forum_num=$(grep -E '^\S' out | grep -Ev '^$' | wc -l)
-echo "ChinaUnix共有$forum_num个版块“
+echo "ChinaUnix共有$forum_num个版块"
 
 # 版主数
-moderator_num=$(grep -E '^\s' out | tr ' ' '\n' | grep -Ev '^$' | wc -l)
-echo "ChinaUnix共有$moderator_num个版主“
+moderator_num=$(grep -E '^\s' out | tr -d '\t' | tr ' ' '\n' | grep -Ev '^$' | wc -l)
+echo "ChinaUnix共有$moderator_num个版主"
