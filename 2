@@ -1,0 +1,9 @@
+的确， sed -i 应该是先用sed处理完，再rename操作的。
+从 strace sed -i 's/1/x/g' out 就可以清楚的看到。
+
+看inode也很清楚,
+$ cal > out
+$ ls -i out
+1541258 out
+$ sed -i 's/2/x/g' out && ls -i out
+1541255 out
