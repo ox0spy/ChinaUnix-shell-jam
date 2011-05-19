@@ -59,11 +59,11 @@ TMPFILE=$(mktemp)
 main | tee $TMPFILE
 
 # 版块数
-forum_num=$(grep -Ev '^[[:space:]]' $TMPFILE | grep -Ev '^$' | wc -l)
+forum_num=$(grep -Ev '^[[:space:]]' $TMPFILE | grep -Ev '^$' | sort -u | wc -l)
 echo "ChinaUnix共有$forum_num个版块"
 
 # 版主数
-moderator_num=$(grep -E '^[[:space:]]' $TMPFILE | tr -d '\t' | tr ' ' '\n' | grep -Ev '^$' | wc -l)
+moderator_num=$(grep -E '^[[:space:]]' $TMPFILE | tr -d '\t' | tr ' ' '\n' | grep -Ev '^$' | sort -u | wc -l)
 echo "ChinaUnix共有$moderator_num个版主"
 
 rm -f $TMPFILE
