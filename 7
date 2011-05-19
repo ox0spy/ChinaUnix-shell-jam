@@ -1,0 +1,2 @@
+7. #!/bin/sed -f"  shebang 后可有其它字符吗？为什么？
+可以, 如: #!/bin/sed -fa.sed, a.sed 将作为 -f 的参数. -f后的所有字符串将作为一个参数, 所以, #!/bin/sed -fa.sed -fb.sed将报错,除非你当前目录有个文件名为"a.sed -fb.sed".

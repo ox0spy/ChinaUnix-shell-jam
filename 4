@@ -1,0 +1,5 @@
+不一样，
+awk -F field-separator # awk -F ':'
+awk -Ffield-separator  # awk -F:
+
+所以, awk -F '' 结果是每个字符都是一个字段; 而, awk -F'' 是有语法错误的.
