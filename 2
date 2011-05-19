@@ -1,4 +1,4 @@
-的确， sed -i 应该是先用sed处理完，再rename操作的。
+的确， sed -i 是先用sed处理完，再rename操作的。
 从 strace sed -i 's/1/x/g' out 就可以清楚的看到。
 
 看inode也很清楚,
