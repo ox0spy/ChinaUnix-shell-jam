@@ -1,0 +1,108 @@
+1. 用最简洁的命令列出当前目录下的一级子目录，可以不包含隐藏目录（目录名以.开头的目录）
+[code]
+# 显示当前目录下的子目录
+echo "当前目录下的子目录"
+ls -l | grep -E '^d' | awk '{print $8}'
+
+# 显示当前目录下的子目录, 包含隐藏目录
+echo "当前目录下的子目录, 包含隐藏目录"
+ls -la | grep -E '^d' | awk '{print $8}' | grep -Ev '^\.$|^\.\.
+# 下面的也可以, 没法现那个更简洁
+# find . -maxdepth 1 -type d ! -regex '^\.
+[/code]
+
+2. GNU sed 提供了-i选项，为什么有人说sed -i 并不象 ed 一样真正的编辑文件？(提示:观察文件改变前后的inode)
+[code]
+的确， sed -i 是先用sed处理完，再rename操作的。
+从 strace sed -i 's/1/x/g' out 就可以清楚的看到。
+
+看inode也很清楚,
+$ cal > out
+$ ls -i out
+1541258 out
+$ sed -i 's/2/x/g' out && ls -i out
+1541255 out
+[/code]
+
+3. 用shell写一个cgi脚本，提供一个简单的webmail介面，将本地的一个文件通过web服务器发送到指定的邮箱
+[code]
+[/code]
+
+4. awk -F'' 与 awk -F '' 一样吗？
+[code]
+不一样，
+awk -F field-separator # awk -F ':'
+awk -Ffield-separator  # awk -F:
+
+所以, awk -F '' 结果是每个字符都是一个字段; 而, awk -F'' 是有语法错误的.
+[/code]
+
+5. 这条语句有什么作用？ sed -if /script/scr.sedcc test.txt
+[code]
+[/code]
+
+6. #!/bin/sh
+# the next line restarts using tclsh \
+exec tclsh "$0" "$@"
+是如何执行的？与"#!/usr/local/bin/tclsh"相比，它有什么优点？
+[code]
+[/code]
+
+7. #!/bin/sed -f"  shebang 后可有其它字符吗？为什么？
+可以, 如: #!/bin/sed -fa.sed, a.sed 将作为 -f 的参数. -f后的所有字符串将作为一个参数, 所以, #!/bin/sed -fa.sed -fb.sed将报错,除非你当前目录有个文件名为"a.sed -fb.sed".
+[code]
+[/code]
+
+8. GNU awk的$1=$1到底有什么作用？$0=$0呢？
+[code]
+[/code]
+
+9. 写一个shell脚本，输出CU现有的版面和相应版主，并统计有多少个版面及多少个版主。
+[code]
+#!/bin/bash
+
+# root url
+RURL="http://bbs.chinaunix.net"
+
+# 获取版块
+# in: 如果无参数调用，获取首页的所有版块;
+#     如果提供一个参数调用, 返回该版块内的子版块
+# out: 输出获取到的版块名
+function get_forums()
+{
+    if [ -z $1 ]; then
+        curl $RURL -o- 2>/dev/null | grep -Eo 'forum[^"]+\.html' | sort -u
+    else
+        curl $RURL/$1 -o- 2>/dev/null | grep -Eo 'forum[^"]+\.html' | \
+            grep -v "$1" | sort -u
+    fi
+
+}
+
+# 获取指定版块的版块名
+# in: 版块, 如: forum-216-1.html
+# out: 输出该版块的名字
+function get_forum_name()
+{
+    curl $RURL/$1 -o- 2>/dev/null | grep forumheader -A 1 | \
+        iconv -f GBK -t UTF-8 | \
+        cut -d'>' -f2 | cut -d '<' -f1
+}
+
+# 获取指定版块的所有版主
+# in: 版块, 如: forum-216-1.html
+# out: 输出该版块的所有版主
+function get_moderators()
+{
+    test -z $1 && echo "usage $0 <forum-123-1.html" && exit
+    curl $RURL/$1 -o- 2>/dev/null | \
+        grep modedby -A 1 | iconv -f GBK -t UTF-8 | \
+        tr ',' '\n' | \
+        cut -d'>' -f2 | cut -d'<' -f1 | \
+        grep -Ev '^10. 人机五子棋。原始规则（无禁手），最好加上标准规则，三手交换（即黑下第二手之后白可以提出交换），五手两打，黑三三禁手，黑四四禁手，黑长连禁手（超过5个子相连），逢五无禁手。白无禁手，长连也算胜。关键在于人机对下。[code]
+
+[/code]
+
+10. 人机五子棋。原始规则（无禁手），最好加上标准规则，三手交换（即黑下第二手之后白可以提出交换），五手两打，黑三三禁手，黑四四禁手，黑长连禁手（超过5个子相连），逢五无禁手。白无禁手，长连也算胜。关键在于人机对下。
+[code]
+[/code]
