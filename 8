@@ -1,0 +1,18 @@
+# from awk manpage
+# Assigning a value to an existing field causes the whole record to  be  rebuilt  when  $0  is  referenced.
+# Similarly, assigning a value to $0 causes the record to be resplit, creating new values for the fields.
+
+# sample code
+$ echo 'a b c' | awk '{print $0; $1=$1;OFS=":"; FS=":"; print $0; print $1}'
+a b c
+a:b:c
+a
+
+$ echo 'a b c' | awk '{print $0; $0=$0;OFS=":"; FS=":"; print $0; print $1}'
+a b c
+a b c
+a
+
+从上面的例子可以看出:
+$1=$1导致整个记录($0)重新创建，字段也会根据FS的值重新分割.
+$0=$0只会使字段根据FS的值重新分割.
